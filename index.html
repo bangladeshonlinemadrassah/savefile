@@ -17,9 +17,66 @@
     button:hover { background:#f0f0f0; }
     .btn-blue { background:#2563eb; color:white; border-color:#1e4ed8; }
     .btn-green { background:#0d9488; color:white; border-color:#0b806f; }
+
+    <!-- Password overlay CSS (paste inside <head>) -->
+  #pw-overlay {
+    position: fixed;
+    inset: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: rgba(2,6,23,0.92);
+    z-index: 99999;
+    padding: 20px;
+  }
+  .pw-card {
+    width: 100%;
+    max-width: 460px;
+    background: #071023;
+    padding: 18px;
+    border-radius: 10px;
+    box-shadow: 0 8px 30px rgba(0,0,0,0.6);
+    color: #e6f7ff;
+    border: 1px solid rgba(255,255,255,0.04);
+  }
+  .pw-card h2 { margin:0 0 8px; font-size:18px; color:#7dd3fc; }
+  .pw-card p { margin:0 0 12px; color:#cbd5e1; font-size:14px; }
+  .pw-card input[type="password"]{
+    width:100%;
+    padding:10px;
+    border-radius:8px;
+    border:1px solid rgba(255,255,255,0.06);
+    background: rgba(255,255,255,0.02);
+    color:#fff;
+    font-size:14px;
+    margin-bottom:10px;
+  }
+  .pw-card button{
+    width:100%;
+    padding:10px;
+    border-radius:8px;
+    border:0;
+    background:#06b6d4;
+    color:#022;
+    font-weight:700;
+    cursor:pointer;
+  }
+  .pw-note{ font-size:12px; color:#9ecfff; margin-top:8px; text-align:center; }
+  /* hide overlay when aria-hidden true (for accidental display) */
+  #pw-overlay[aria-hidden="true"]{ display:none; }
   </style>
 </head>
 <body>
+  <!-- Password overlay (paste near top of <body>) -->
+<div id="pw-overlay" aria-hidden="false">
+  <div class="pw-card" role="dialog" aria-labelledby="pwTitle">
+    <h2 id="pwTitle">ওয়েবসাইট পাসওয়ার্ড দরকার</h2>
+    <p>সাইটটি দেখতে পাসওয়ার্ড দিন।</p>
+    <input id="pwInput" type="password" placeholder="Password" autocomplete="off" />
+    <button id="pwBtn">Unlock</button>
+    <div class="pw-note">Session পর্যন্ত স্মরণ করা হবে — ট্যাব বন্ধ করলে আবার পাসওয়ার্ড চাইবে।</div>
+  </div>
+</div>
   <h1>10 Code Store — Sahibul Musa Sium</h1>
 
   <!-- Code 1 -->
@@ -567,6 +624,50 @@ function doGet(e) {
       a.remove();
       URL.revokeObjectURL(url);
     }
+    <!-- Password logic (paste before </body>) -->
+(function(){
+  // ===== CONFIGURE PASSWORD HERE =====
+  const PASSWORD = 'Sahibul@2008';
+  // ===== /CONFIG =====
+
+  const overlay = document.getElementById('pw-overlay');
+  const input = document.getElementById('pwInput');
+  const btn = document.getElementById('pwBtn');
+
+  // যদি আগে session এ আনলক করা থাকে তাহলে সরাসরি দেখাবে
+  if (sessionStorage.getItem('site_unlocked') === '1') {
+    overlay.setAttribute('aria-hidden','true');
+  } else {
+    overlay.setAttribute('aria-hidden','false');
+    input.focus();
+  }
+
+  function unlock() {
+    const v = (input.value || '').trim();
+    if (!v) { alert('পাসওয়ার্ড দিন।'); input.focus(); return; }
+    if (v === PASSWORD) {
+      sessionStorage.setItem('site_unlocked','1'); // সেশন পর্যন্ত
+      overlay.setAttribute('aria-hidden','true');
+      input.value = '';
+    } else {
+      alert('পাসওয়ার্ড ভুল। আবার চেষ্টা করুন।');
+      input.value = '';
+      input.focus();
+    }
+  }
+
+  btn.addEventListener('click', unlock);
+  input.addEventListener('keydown', function(e){ if (e.key === 'Enter') unlock(); });
+
+  // (অপশনাল) Ctrl+Shift+U দিয়ে দ্রুত আনলক — ডেভ টুলস থেকে কপি/চেঞ্জ করলেও কাজে আসবে না;
+  // নিরাপত্তা বাড়াতে এই লাইনটি মুছে ফেলতে পারেন
+  document.addEventListener('keydown', function(e){
+    if (e.ctrlKey && e.shiftKey && e.key.toLowerCase() === 'u') {
+      // quick hint (optional) — comment বা remove for more secrecy
+      alert('পাসওয়ার্ড টিপুন।');
+    }
+  });
+})();
   </script>
 </body>
 </html>
