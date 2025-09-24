@@ -384,8 +384,64 @@ function doGet(e) {
   <!-- Code 3 -->
   <section class="snippet">
     <h2>Code 3</h2>
-    <div class="subtitle">👉 Dashboard Layout</div>
-    <textarea id="code3" spellcheck="false" wrap="off"><!-- এখানে Code 3 লিখুন --></textarea>
+    <div class="subtitle">Update data normalize row Code</div>
+    <textarea id="code3" spellcheck="false" wrap="off">function normalizeRows(rows) {
+  try {
+    // প্রথমে ক্লাসগুলোকে সাবজেক্ট অনুযায়ী গ্রুপ করা
+    const groupedBySubject = rows.reduce((acc, row) => {
+      const subjectFromSheet = row.subject || 'Unknown Subject';
+      const matchedSubject = findBestMatchingSubject(subjectFromSheet) || subjectFromSheet;
+      if (!acc[matchedSubject]) {
+        acc[matchedSubject] = [];
+      }
+      acc[matchedSubject].push(row);
+      return acc;
+    }, {});
+
+    // নির্দিষ্ট ফোল্ডারগুলো
+    const specialFolders = ["মিশন", "ক্লাসের লেকচার শীট", "পরীক্ষার রেজাল্ট শীট"];
+
+    // প্রতিটি সাবজেক্টের ক্লাসগুলোকে টাইমস্ট্যাম্প অনুযায়ী সাজানো (পুরানো থেকে নতুন)
+    const normalizedRows = [];
+    Object.keys(groupedBySubject).forEach(subject => {
+      const sortedClasses = groupedBySubject[subject].sort((a, b) => {
+        return new Date(a.timestamp).getTime() - new Date(b.timestamp).getTime();
+      });
+
+      // প্রতিটি ক্লাসের জন্য সিরিয়াল নাম্বার যুক্ত করা
+      sortedClasses.forEach((row, index) => {
+        const timestamp = row.timestamp || '';
+        // স্পেশাল ফোল্ডারের জন্য কলাম C (link) থাকলে সেটি, নইলে কলাম E (file) নেওয়া
+        let link = '#';
+        if (specialFolders.includes(subject)) {
+          link = row.link || row.file || '#'; // প্রথমে C, নইলে E
+        } else {
+          link = row.link || '#'; // অন্য ফোল্ডারের জন্য শুধুমাত্র C
+        }
+        const title = row.title || 'ক্লাস ভিডিও';
+        const date = getDateFromTimestamp(timestamp);
+        const time = getTimeFromTimestamp(timestamp);
+        const serial = index + 1;
+
+        normalizedRows.push({
+          subject: subject,
+          originalSubject: row.subject,
+          link: link, // একটি লিংক (C অথবা E)
+          title: title,
+          date: date,
+          time: time,
+          serial: serial,
+          timestamp: timestamp
+        });
+      });
+    });
+
+    return normalizedRows;
+  } catch (error) {
+    console.error("Rows normalization error:", error);
+    return [];
+  }
+}</textarea>
     <div class="controls">
       <button onclick="selectCode('code3')">Select All</button>
       <button class="btn-blue" onclick="copyCode('code3')">Copy</button>
