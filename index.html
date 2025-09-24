@@ -207,8 +207,173 @@ function doGet(e) {
   <!-- Code 2 -->
   <section class="snippet">
     <h2>Code 2</h2>
-    <div class="subtitle">👉 Registration Form</div>
-    <textarea id="code2" spellcheck="false" wrap="off"><!-- এখানে Code 2 লিখুন --></textarea>
+    <div class="subtitle">Old appscript Code</div>
+    <textarea id="code2" spellcheck="false" wrap="off">/************************************
+ * Dakhil-26 (BOM) – Web App API
+ * Works with your HTML site's normalizeRow()
+ * Author: Sahibul Musa Sium (with ❤️)
+ ************************************/
+
+// ====== CONFIG ======
+const SPREADSHEET_ID = '1GuSncL5wpCvsrnf0KHfUUOImDdT2GkTPRmaguRSapCU';
+const SHEET_NAME = 'Form Responses 1';
+
+// ====== UTIL ======
+function respondJson(obj) {
+  return ContentService.createTextOutput(JSON.stringify(obj, null, 2))
+    .setMimeType(ContentService.MimeType.JSON);
+}
+
+function isEmpty(v) { 
+  return v === null || v === undefined || String(v).trim() === ''; 
+}
+
+function getHeaderIndices(headers) {
+  console.log('All headers in sheet:', headers);
+  
+  const indices = {};
+  
+  // আপনার সঠিক হেডার নাম অনুযায়ী ম্যাচ করি
+  for (let i = 0; i < headers.length; i++) {
+    const header = String(headers[i] || '').trim();
+    
+    if (header === 'Timestamp') indices.timestamp = i;
+    if (header === 'Subject Name:') indices.subject = i;
+    if (header === 'Link:') indices.link = i;
+    if (header === 'Title:') indices.title = i;
+  }
+  
+  console.log('Found header indices:', indices);
+  return indices;
+}
+
+function toIsoStringFromCell(cellValue) {
+  try {
+    if (cellValue instanceof Date) {
+      return Utilities.formatDate(cellValue, Session.getScriptTimeZone(), "yyyy-MM-dd'T'HH:mm:ssXXX");
+    }
+    
+    if (typeof cellValue === 'string' && cellValue.trim() !== '') {
+      const parsed = new Date(cellValue);
+      if (!isNaN(parsed.getTime())) {
+        return Utilities.formatDate(parsed, Session.getScriptTimeZone(), "yyyy-MM-dd'T'HH:mm:ssXXX");
+      }
+      return cellValue; // Return original if can't parse
+    }
+  } catch (e) {
+    console.error('Date parsing error:', e);
+  }
+  
+  return String(cellValue || '');
+}
+
+// ====== CORE ======
+function fetchRows(ssId, sheetName) {
+  try {
+    const ss = SpreadsheetApp.openById(ssId);
+    const sh = ss.getSheetByName(sheetName);
+    if (!sh) throw new Error(`Sheet "${sheetName}" not found`);
+    
+    const dataRange = sh.getDataRange();
+    const values = dataRange.getValues();
+    
+    console.log('Total rows found:', values.length);
+    if (values.length < 2) return [];
+
+    const headers = values[0];
+    const idx = getHeaderIndices(headers);
+
+    // Check if we found the essential headers
+    if (Object.keys(idx).length === 0) {
+      throw new Error('No matching headers found. Available headers: ' + headers.join(', '));
+    }
+
+    const out = [];
+    for (let r = 1; r < values.length; r++) {
+      const row = values[r];
+      
+      // Skip empty rows
+      if (row.every(cell => isEmpty(cell))) continue;
+
+      const timestamp = idx.timestamp !== undefined ? row[idx.timestamp] : '';
+      const subject = idx.subject !== undefined ? row[idx.subject] : '';
+      const link = idx.link !== undefined ? row[idx.link] : '';
+      const title = idx.title !== undefined ? row[idx.title] : '';
+
+      console.log(`Row ${r + 1} data:`, {
+        timestamp: String(timestamp),
+        subject: String(subject),
+        link: String(link),
+        title: String(title)
+      });
+
+      out.push({
+        timestamp: toIsoStringFromCell(timestamp),
+        subject: String(subject || ''),
+        link: String(link || ''),
+        title: String(title || ''),
+        _row: r + 1,
+        serial: out.length + 1
+      });
+    }
+    
+    console.log('Successfully processed', out.length, 'rows');
+    return out;
+  } catch (error) {
+    console.error('Error in fetchRows:', error);
+    throw error;
+  }
+}
+
+// ====== HTTP HANDLERS ======
+function doGet(e) {
+  try {
+    const params = e ? e.parameter || {} : {};
+    console.log('API called with parameters:', params);
+    
+    const rows = fetchRows(SPREADSHEET_ID, SHEET_NAME);
+    
+    // Apply subject filter if provided
+    const subjectFilter = (params.subject || '').toLowerCase().trim();
+    let filteredRows = rows;
+    if (subjectFilter) {
+      filteredRows = filteredRows.filter(row => 
+        row.subject.toLowerCase().includes(subjectFilter)
+      );
+    }
+
+    // Apply date filter if provided
+    const dateFilter = (params.date || '').trim();
+    if (dateFilter) {
+      filteredRows = filteredRows.filter(row => 
+        row.timestamp.includes(dateFilter)
+      );
+    }
+
+    // Sort by timestamp (newest first by default)
+    filteredRows.sort((a, b) => {
+      return new Date(b.timestamp) - new Date(a.timestamp);
+    });
+
+    return respondJson({ 
+      ok: true, 
+      count: filteredRows.length, 
+      rows: filteredRows,
+      debug: {
+        total_rows_in_sheet: rows.length,
+        filtered_count: filteredRows.length,
+        timezone: Session.getScriptTimeZone()
+      }
+    });
+  } catch (err) {
+    console.error('API Error:', err);
+    return respondJson({ 
+      ok: false, 
+      error: err.message,
+      suggestion: 'Check the header names in your Google Sheet'
+    }, 500);
+  }
+}</textarea>
     <div class="controls">
       <button onclick="selectCode('code2')">Select All</button>
       <button class="btn-blue" onclick="copyCode('code2')">Copy</button>
