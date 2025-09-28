@@ -704,8 +704,873 @@ window.addEventListener('click',(e)=>{ if(e.target==$('#formModal')) hideForm();
   <!-- Code 5 -->
   <section class="snippet">
     <h2>Code 5</h2>
-    <div class="subtitle">👉 Table Design</div>
-    <textarea id="code5" spellcheck="false" wrap="off"><!-- এখানে Code 5 লিখুন --></textarea>
+    <div class="subtitle">👉 ড্যাশবোর্ড </div>
+    <textarea id="code5" spellcheck="false" wrap="off"><!DOCTYPE html>
+<html lang="bn">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Dakhil-26 Dashboard</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <link href="https://fonts.googleapis.com/css2?family=Tiro+Bangla:wght@400;700&family=Poppins:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --primary: #2563eb;
+      --primary-dark: #1e40af;
+      --secondary: #10b981;
+      --accent: #8b5cf6;
+      --danger: #ef4444;
+      --warning: #f59e0b;
+      --dark: #0f172a;
+      --darker: #0a0e1a;
+      --light: #f1f5f9;
+      --text: #e2e8f0;
+      --text-muted: #94a3b8;
+      --card-bg: rgba(30, 41, 59, 0.7);
+      --card-border: rgba(255, 255, 255, 0.08);
+      --glass: rgba(15, 23, 42, 0.6);
+      --glass-border: rgba(255, 255, 255, 0.1);
+      --gradient-primary: linear-gradient(135deg, #2563eb 0%, #10b981 100%);
+      --gradient-secondary: linear-gradient(135deg, #8b5cf6 0%, #ec4899 100%);
+      --shadow-sm: 0 4px 6px rgba(0, 0, 0, 0.1);
+      --shadow-md: 0 10px 15px -3px rgba(0, 0, 0, 0.2);
+      --shadow-lg: 0 20px 25px -5px rgba(0, 0, 0, 0.3);
+      --radius: 12px;
+      --transition: all 0.3s ease;
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    html, body {
+      background: var(--darker);
+      color: var(--text);
+      font-family: 'Poppins', 'Tiro Bangla', system-ui, sans-serif;
+      line-height: 1.6;
+      min-height: 100vh;
+      overflow-x: hidden;
+      scrollbar-width: none;
+      -ms-overflow-style: none;
+    }
+
+    body::-webkit-scrollbar {
+      display: none;
+    }
+
+    .bangla-font {
+      font-family: 'Tiro Bangla', 'Poppins', serif;
+    }
+
+    a {
+      color: inherit;
+      text-decoration: none;
+    }
+
+    .container {
+      max-width: 1280px;
+      margin: 0 auto;
+      padding: 20px;
+    }
+
+    header {
+      position: sticky;
+      top: 0;
+      z-index: 1000;
+      backdrop-filter: blur(16px) saturate(180%);
+      background: rgba(10, 14, 26, 0.85);
+      border-bottom: 1px solid var(--card-border);
+      box-shadow: var(--shadow-md);
+    }
+
+    .nav {
+      display: flex;
+      gap: 20px;
+      align-items: center;
+      justify-content: space-between;
+      padding: 15px 20px;
+    }
+
+    .brand {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      font-weight: 800;
+      letter-spacing: 0.5px;
+      font-size: 1.6rem;
+      color: var(--text);
+      position: relative;
+    }
+
+    .brand:hover {
+      color: var(--primary);
+    }
+
+    .tag {
+      font-size: 0.85rem;
+      font-weight: 600;
+      background: var(--gradient-secondary);
+      -webkit-background-clip: text;
+      background-clip: text;
+      color: transparent;
+      padding: 6px 12px;
+      border-radius: 20px;
+      border: 1px solid var(--glass-border);
+      backdrop-filter: blur(10px);
+    }
+
+    .btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      padding: 10px 16px;
+      border-radius: 10px;
+      border: none;
+      background: var(--gradient-primary);
+      color: white;
+      font-weight: 600;
+      transition: var(--transition);
+      cursor: pointer;
+      box-shadow: 0 4px 10px rgba(37, 99, 235, 0.3);
+      position: relative;
+      overflow: hidden;
+      font-size: 0.85rem;
+    }
+
+    .btn::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: -100%;
+      width: 100%;
+      height: 100%;
+      background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
+      transition: 0.5s;
+    }
+
+    .btn:hover::before {
+      left: 100%;
+    }
+
+    .btn:focus, .btn:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 6px 15px rgba(37, 99, 235, 0.4);
+    }
+
+    .dashboard-modal {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: rgba(0, 0, 0, 0.7);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      z-index: 2000;
+      opacity: 0;
+      visibility: hidden;
+      transition: opacity 0.3s, visibility 0.3s;
+    }
+
+    .dashboard-modal.show {
+      opacity: 1;
+      visibility: visible;
+    }
+
+    .modal-content {
+      background: var(--card-bg);
+      border: 1px solid var(--card-border);
+      border-radius: 16px;
+      padding: 30px;
+      max-width: 600px;
+      width: 90%;
+      max-height: 80vh;
+      overflow-y: auto;
+      backdrop-filter: blur(15px);
+      box-shadow: var(--shadow-lg);
+      position: relative;
+    }
+
+    .modal-header {
+      text-align: center;
+      margin-bottom: 20px;
+    }
+
+    .modal-header h2 {
+      font-size: 1.5rem;
+      background: var(--gradient-primary);
+      -webkit-background-clip: text;
+      background-clip: text;
+      color: transparent;
+      margin-bottom: 10px;
+    }
+
+    .modal-body {
+      margin-bottom: 25px;
+    }
+
+    .modal-body p {
+      color: var(--text-muted);
+      line-height: 1.6;
+      margin-bottom: 15px;
+    }
+
+    .stats {
+      margin-bottom: 20px;
+    }
+
+    .cards {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+      gap: 15px;
+    }
+
+    .card {
+      background: var(--glass);
+      border: 1px solid var(--glass-border);
+      border-radius: 12px;
+      padding: 15px;
+      text-align: left;
+    }
+
+    .card h3 {
+      margin-bottom: 10px;
+      font-size: 1.2rem;
+    }
+
+    .card p {
+      margin: 5px 0;
+      font-size: 0.9rem;
+    }
+
+    .badge-current {
+      display: inline-block;
+      padding: 5px 10px;
+      border-radius: 20px;
+      font-size: 0.8rem;
+      margin-left: 10px;
+      font-weight: 600;
+    }
+
+    .badge-starter {
+      background: #6b7280;
+      color: white;
+    }
+
+    .badge-bronze {
+      background: #cd7f32;
+      color: white;
+    }
+
+    .badge-silver {
+      background: #c0c0c0;
+      color: white;
+    }
+
+    .badge-gold {
+      background: #ffd700;
+      color: black;
+    }
+
+    .badge-platinum {
+      background: #e5e4e2;
+      color: black;
+    }
+
+    .badges-dropdown {
+      margin-top: 20px;
+      text-align: center;
+    }
+
+    .badges-dropdown select {
+      padding: 10px;
+      border-radius: 10px;
+      background: var(--glass);
+      color: var(--text);
+      border: 1px solid var(--card-border);
+    }
+
+    .alarms .alert-box {
+      margin-bottom: 10px;
+    }
+
+    .alert-box {
+      background: rgba(239, 68, 68, 0.1);
+      border: 1px solid var(--danger);
+      border-radius: 10px;
+      padding: 15px;
+      margin-bottom: 20px;
+      color: var(--text);
+      position: relative;
+    }
+
+    .alert-box.warning {
+      background: rgba(245, 158, 11, 0.1);
+      border-color: var(--warning);
+    }
+
+    .alert-box.success {
+      background: rgba(16, 185, 129, 0.1);
+      border-color: var(--secondary);
+    }
+
+    .alert-box i {
+      margin-right: 10px;
+    }
+
+    .progress-section {
+      margin-top: 20px;
+      text-align: center;
+    }
+
+    .progress-section p {
+      margin-top: 10px;
+    }
+
+    .progress-bar {
+      height: 10px;
+      background: var(--text-muted);
+      border-radius: 5px;
+      overflow: hidden;
+      margin-top: 10px;
+    }
+
+    .progress-bar-fill {
+      height: 100%;
+      background: var(--gradient-primary);
+      transition: width 0.5s ease;
+    }
+
+    .notes-section {
+      margin-top: 20px;
+    }
+
+    .notes-section textarea {
+      width: 100%;
+      padding: 10px;
+      border-radius: 10px;
+      border: 1px solid var(--card-border);
+      background: var(--glass);
+      color: var(--text);
+      outline: none;
+      resize: vertical;
+      min-height: 80px;
+    }
+
+    .notes-section button {
+      margin-top: 10px;
+      padding: 10px 20px;
+      border-radius: 10px;
+      border: none;
+      background: var(--gradient-primary);
+      color: white;
+      font-weight: 600;
+      cursor: pointer;
+    }
+
+    .notes-section ul {
+      list-style: none;
+      margin-top: 15px;
+    }
+
+    .notes-section li {
+      background: var(--glass);
+      border: 1px solid var(--glass-border);
+      border-radius: 8px;
+      padding: 10px;
+      margin-bottom: 10px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .notes-section li button {
+      background: var(--danger);
+      padding: 5px 10px;
+      font-size: 0.8rem;
+    }
+
+    .name-input-form {
+      display: flex;
+      flex-direction: column;
+      gap: 15px;
+      margin-bottom: 20px;
+    }
+
+    .name-input-form input {
+      padding: 14px;
+      border-radius: 10px;
+      border: 1px solid var(--card-border);
+      background: var(--glass);
+      color: var(--text);
+      outline: none;
+      font-size: 1rem;
+    }
+
+    .name-input-form button {
+      padding: 14px;
+      border-radius: 10px;
+      border: none;
+      background: var(--gradient-primary);
+      color: white;
+      font-weight: 600;
+      cursor: pointer;
+    }
+
+    .notification {
+      position: fixed;
+      bottom: 30px;
+      right: 30px;
+      padding: 15px 22px;
+      background: var(--card-bg);
+      border: 1px solid var(--card-border);
+      border-radius: 10px;
+      box-shadow: var(--shadow-lg);
+      z-index: 1000;
+      opacity: 0;
+      transform: translateY(20px);
+      transition: opacity 0.3s, transform 0.3s;
+      backdrop-filter: blur(15px);
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      max-width: 350px;
+      font-size: 0.9rem;
+    }
+
+    .notification.show {
+      opacity: 1;
+      transform: translateY(0);
+    }
+
+    .notification.error {
+      border-left: 4px solid var(--danger);
+    }
+
+    .notification.success {
+      border-left: 4px solid var(--secondary);
+    }
+
+    .notification.warning {
+      border-left: 4px solid var(--warning);
+    }
+
+    .close-btn {
+      position: absolute;
+      top: 10px;
+      right: 10px;
+      font-size: 1.5rem;
+      cursor: pointer;
+      color: var(--text-muted);
+    }
+
+    .close-btn:hover {
+      color: var(--text);
+    }
+
+    @media (max-width: 480px) {
+      .modal-content {
+        padding: 20px;
+      }
+
+      .modal-header h2 {
+        font-size: 1.5rem;
+      }
+
+      .card h3 {
+        font-size: 1rem;
+      }
+
+      .card p {
+        font-size: 0.8rem;
+      }
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <nav class="nav container">
+      <div class="brand">
+        <i class="fas fa-graduation-cap"></i>
+        <span>DAKHIL-26 <br>
+          <span class="tag">"Dashboard"</span></span>
+      </div>
+      <div class="controls">
+        <button class="btn" id="dashboard-btn"><i class="fas fa-tachometer-alt"></i> <span class="bangla-font">ড্যাশবোর্ড</span></button>
+      </div>
+    </nav>
+  </header>
+  <div id="dashboard-modal" class="dashboard-modal">
+    <div class="modal-content">
+      <div class="modal-body" id="dashboard-body">
+        <!-- ডাইনামিক কনটেন্ট এখানে লোড হবে -->
+      </div>
+    </div>
+  </div>
+  <div id="notification" class="notification"></div>
+  <script>
+    const STORAGE_KEYS = {
+      STUDENT_NAME: 'dakhil26_student_name',
+      JOIN_DATE: 'dakhil26_join_date',
+      LAST_LOGIN: 'dakhil26_last_login',
+      LAST_ACTIVITY: 'dakhil26_last_activity',
+      COMPLETED_ITEMS: 'dakhil26_completed_items',
+      NOTES: 'dakhil26_notes'
+    };
+
+    const motivationalQuotes = [
+      "প্রতিদিন একটি ক্লাস করুন, সাফল্য আপনার কাছে আসবে! 🌟",
+      "ছোট ছোট পদক্ষেপই বড় সাফল্যের পথ তৈরি করে! 💪",
+      "নিয়মিত পড়াশোনা আপনাকে লক্ষ্যের কাছে নিয়ে যাবে! 🚀",
+      "প্রতিটি ক্লাস আপনাকে এক ধাপ এগিয়ে নেয়! 🏆"
+    ];
+
+    const badges = [
+      { name: 'Starter', threshold: 0, class: 'badge-starter', icon: '🏁' },
+      { name: 'Bronze Cup', threshold: 30, class: 'badge-bronze', icon: '🥉' },
+      { name: 'Silver Cup', threshold: 50, class: 'badge-silver', icon: '🥈' },
+      { name: 'Gold Cup', threshold: 65, class: 'badge-gold', icon: '🥇' },
+      { name: 'Platinum Trophy', threshold: 80, class: 'badge-platinum', icon: '🏆' }
+    ];
+
+    // Mock data for classes, missions, and exams
+    const mockItems = {
+      classes: Array.from({ length: 120 }, (_, i) => ({
+        id: `c${String(i + 1).padStart(2, '0')}`,
+        addDate: `01-${String((i % 12) + 1).padStart(2, '0')}-2025`
+      })),
+      missions: Array.from({ length: 60 }, (_, i) => ({
+        id: `m${String(i + 1).padStart(2, '0')}`,
+        addDate: `01-${String((i % 12) + 1).padStart(2, '0')}-2025`
+      })),
+      exams: Array.from({ length: 20 }, (_, i) => ({
+        id: `e${String(i + 1).padStart(2, '0')}`,
+        addDate: `01-${String((i % 12) + 1).padStart(2, '0')}-2025`
+      }))
+    };
+
+    function $(sel, root = document) { return root.querySelector(sel); }
+
+    function showNotification(message, isError = false, isWarning = false) {
+      const notification = $('#notification');
+      notification.innerHTML = `<i class="${isError ? 'fas fa-exclamation-circle' : isWarning ? 'fas fa-exclamation-triangle' : 'fas fa-check-circle'}"></i> ${message}`;
+      notification.className = 'notification ' + (isError ? 'error' : isWarning ? 'warning' : 'success');
+      notification.classList.add('show');
+
+      setTimeout(() => {
+        notification.classList.remove('show');
+      }, 3000);
+    }
+
+    function getTodayDate() {
+      const today = new Date();
+      const year = today.getFullYear();
+      const month = String(today.getMonth() + 1).padStart(2, '0');
+      const day = String(today.getDate()).padStart(2, '0');
+      return `${day}-${month}-${year}`; // ফরম্যাট: DD-MM-YYYY
+    }
+
+    function parseDate(dateStr) {
+      if (!dateStr) return new Date(0);
+      const [day, month, year] = dateStr.split('-').map(Number);
+      return new Date(year, month - 1, day);
+    }
+
+    function saveStudentData(name, joinDate, lastLogin, lastActivity, completedItems) {
+      localStorage.setItem(STORAGE_KEYS.STUDENT_NAME, name || 'শিক্ষার্থী');
+      localStorage.setItem(STORAGE_KEYS.JOIN_DATE, joinDate || getTodayDate());
+      localStorage.setItem(STORAGE_KEYS.LAST_LOGIN, lastLogin || new Date().toISOString());
+      localStorage.setItem(STORAGE_KEYS.LAST_ACTIVITY, lastActivity || new Date().toISOString());
+      localStorage.setItem(STORAGE_KEYS.COMPLETED_ITEMS, JSON.stringify(completedItems || []));
+    }
+
+    function getStudentData() {
+      return {
+        name: localStorage.getItem(STORAGE_KEYS.STUDENT_NAME) || 'শিক্ষার্থী',
+        joinDate: localStorage.getItem(STORAGE_KEYS.JOIN_DATE) || getTodayDate(),
+        lastLogin: localStorage.getItem(STORAGE_KEYS.LAST_LOGIN) || new Date().toISOString(),
+        lastActivity: localStorage.getItem(STORAGE_KEYS.LAST_ACTIVITY) || new Date().toISOString(),
+        completedItems: JSON.parse(localStorage.getItem(STORAGE_KEYS.COMPLETED_ITEMS)) || []
+      };
+    }
+
+    function saveNotes(notes) {
+      localStorage.setItem(STORAGE_KEYS.NOTES, JSON.stringify(notes));
+    }
+
+    function getNotes() {
+      return JSON.parse(localStorage.getItem(STORAGE_KEYS.NOTES)) || [];
+    }
+
+    function renderNotes() {
+      const notesList = $('#notes-list');
+      const notes = getNotes();
+      notesList.innerHTML = '';
+      notes.forEach((note, index) => {
+        const li = document.createElement('li');
+        li.innerHTML = `
+          <span>${note}</span>
+          <button onclick="deleteNote(${index})">মুছে ফেলুন</button>
+        `;
+        notesList.appendChild(li);
+      });
+    }
+
+    window.deleteNote = function(index) {
+      let notes = getNotes();
+      notes.splice(index, 1);
+      saveNotes(notes);
+      renderNotes();
+    };
+
+    function calculateStats(joinDate, completed) {
+      const joinDateObj = parseDate(joinDate);
+
+      function filterItems(itemList, isAfter) {
+        return itemList.filter(item => {
+          const addDateObj = parseDate(item.addDate);
+          return isAfter ? addDateObj >= joinDateObj : addDateObj < joinDateObj;
+        });
+      }
+
+      const afterClasses = filterItems(mockItems.classes, true);
+      const beforeClasses = filterItems(mockItems.classes, false);
+      const afterMissions = filterItems(mockItems.missions, true);
+      const beforeMissions = filterItems(mockItems.missions, false);
+      const afterExams = filterItems(mockItems.exams, true);
+      const beforeExams = filterItems(mockItems.exams, false);
+
+      const doneAfterClasses = afterClasses.filter(item => completed.includes(item.id)).length;
+      const doneBeforeClasses = beforeClasses.filter(item => completed.includes(item.id)).length;
+      const doneAfterMissions = afterMissions.filter(item => completed.includes(item.id)).length;
+      const doneBeforeMissions = beforeMissions.filter(item => completed.includes(item.id)).length;
+      const doneAfterExams = afterExams.filter(item => completed.includes(item.id)).length;
+      const doneBeforeExams = beforeExams.filter(item => completed.includes(item.id)).length;
+
+      const totalAll = mockItems.classes.length + mockItems.missions.length + mockItems.exams.length;
+      const totalCompleted = completed.length;
+      const progress = totalAll > 0 ? (totalCompleted / totalAll) * 100 : 0;
+
+      return {
+        after: {
+          totalClasses: afterClasses.length,
+          doneClasses: doneAfterClasses,
+          pendingClasses: afterClasses.length - doneAfterClasses,
+          totalMissions: afterMissions.length,
+          doneMissions: doneAfterMissions,
+          pendingMissions: afterMissions.length - doneAfterMissions,
+          totalExams: afterExams.length,
+          doneExams: doneAfterExams,
+          pendingExams: afterExams.length - doneAfterExams
+        },
+        before: {
+          totalClasses: beforeClasses.length,
+          doneClasses: doneBeforeClasses,
+          pendingClasses: beforeClasses.length - doneBeforeClasses,
+          totalMissions: beforeMissions.length,
+          doneMissions: doneBeforeMissions,
+          pendingMissions: beforeMissions.length - doneBeforeMissions,
+          totalExams: beforeExams.length,
+          doneExams: doneBeforeExams,
+          pendingExams: beforeExams.length - doneBeforeExams
+        },
+        progress: progress.toFixed(1)
+      };
+    }
+
+    function getCurrentBadge(progress) {
+      for (let i = badges.length - 1; i >= 0; i--) {
+        if (progress >= badges[i].threshold) {
+          return badges[i];
+        }
+      }
+      return badges[0];
+    }
+
+    function showDashboard() {
+      const studentData = getStudentData();
+      const isNewUser = !localStorage.getItem(STORAGE_KEYS.STUDENT_NAME);
+      const randomQuote = motivationalQuotes[Math.floor(Math.random() * motivationalQuotes.length)];
+      const stats = calculateStats(studentData.joinDate, studentData.completedItems);
+      const currentBadge = getCurrentBadge(stats.progress);
+      const lastActivityDate = new Date(studentData.lastActivity);
+      const daysSinceActivity = (new Date() - lastActivityDate) / (1000 * 60 * 60 * 24);
+
+      const dashboardBody = $('#dashboard-body');
+      dashboardBody.innerHTML = `
+        ${isNewUser ? `
+          <div class="alert-box success bangla-font">
+            <i class="fas fa-info-circle"></i> আপনার নাম লিখুন এবং ড্যাশবোর্ড কাস্টমাইজ করুন!
+          </div>
+          <form class="name-input-form">
+            <input type="text" id="student-name-input" placeholder="আপনার নাম লিখুন" class="bangla-font">
+            <button type="submit" class="bangla-font">নাম সংরক্ষণ করুন</button>
+          </form>
+        ` : `
+          <header class="modal-header bangla-font">
+            <h2>স্বাগতম, ${studentData.name}!</h2>
+            <div class="badge-current ${currentBadge.class}" id="current-badge">${currentBadge.icon} ${currentBadge.name}</div>
+            <div id="close-btn" class="close-btn">✕</div>
+          </header>
+
+          <section class="motivation">
+            <p id="motivation-text" class="bangla-font">${randomQuote}</p>
+          </section>
+
+          <section class="stats after-join bangla-font">
+            <h2>জয়েন-এর পর</h2>
+            <div class="cards">
+              <div class="card" id="card-classes">
+                <h3>ক্লাস</h3>
+                <p>মোট: <span id="after-total-classes">${stats.after.totalClasses}</span></p>
+                <p>করা হয়েছে: <span id="after-done-classes">${stats.after.doneClasses}</span></p>
+                <p>বাকি আছে: <span id="after-pending-classes">${stats.after.pendingClasses}</span></p>
+              </div>
+              <div class="card" id="card-missions">
+                <h3>মিশন</h3>
+                <p>মোট: <span id="after-total-missions">${stats.after.totalMissions}</span></p>
+                <p>সম্পন্ন হয়েছে: <span id="after-done-missions">${stats.after.doneMissions}</span></p>
+                <p>বাকি আছে: <span id="after-pending-missions">${stats.after.pendingMissions}</span></p>
+              </div>
+              <div class="card" id="card-exams">
+                <h3>পরীক্ষা</h3>
+                <p>মোট: <span id="after-total-exams">${stats.after.totalExams}</span></p>
+                <p>দেওয়া হয়েছে: <span id="after-done-exams">${stats.after.doneExams}</span></p>
+                <p>বাকি আছে: <span id="after-pending-exams">${stats.after.pendingExams}</span></p>
+              </div>
+            </div>
+          </section>
+
+          <section class="stats before-join bangla-font">
+            <h2>জয়েন-এর আগে</h2>
+            <div class="cards">
+              <div class="card">
+                <h3>ক্লাস</h3>
+                <p>মোট: <span id="before-total-classes">${stats.before.totalClasses}</span></p>
+                <p>করা হয়েছে: <span id="before-done-classes">${stats.before.doneClasses}</span></p>
+                <p>বাকি আছে: <span id="before-pending-classes">${stats.before.pendingClasses}</span></p>
+              </div>
+              <div class="card">
+                <h3>মিশন</h3>
+                <p>মোট: <span id="before-total-missions">${stats.before.totalMissions}</span></p>
+                <p>সম্পন্ন হয়েছে: <span id="before-done-missions">${stats.before.doneMissions}</span></p>
+                <p>বাকি আছে: <span id="before-pending-missions">${stats.before.pendingMissions}</span></p>
+              </div>
+              <div class="card">
+                <h3>পরীক্ষা</h3>
+                <p>মোট: <span id="before-total-exams">${stats.before.totalExams}</span></p>
+                <p>দেওয়া হয়েছে: <span id="before-done-exams">${stats.before.doneExams}</span></p>
+                <p>বাকি আছে: <span id="before-pending-exams">${stats.before.pendingExams}</span></p>
+              </div>
+            </div>
+          </section>
+
+          <section id="alarms" class="alarms bangla-font"></section>
+
+          <section class="progress-section bangla-font">
+            <h3>সম্মক অগ্রগতি</h3>
+            <div class="progress-bar">
+              <div class="progress-bar-fill" style="width: ${stats.progress}%"></div>
+            </div>
+            <p>${stats.progress}%</p>
+          </section>
+
+          <div class="badges-dropdown bangla-font">
+            <label for="badges-select">ব্যাজসমূহ:</label>
+            <select id="badges-select">
+              ${badges.map(badge => `
+                <option ${stats.progress >= badge.threshold ? '' : 'disabled'}>${badge.icon} ${badge.name} ${stats.progress >= badge.threshold ? '(প্রাপ্ত)' : '(লক)'}</option>
+              `).join('')}
+            </select>
+          </div>
+
+          <section class="notes-section bangla-font">
+            <h3>আমার নোটস</h3>
+            <textarea id="note-input" placeholder="নতুন নোট লিখুন..."></textarea>
+            <button id="add-note-btn">নোট যোগ করুন</button>
+            <ul id="notes-list"></ul>
+          </section>
+        `}
+      `;
+
+      if (isNewUser) {
+        const form = dashboardBody.querySelector('.name-input-form');
+        form.addEventListener('submit', (e) => {
+          e.preventDefault();
+          const nameInput = $('#student-name-input').value.trim();
+          if (nameInput) {
+            saveStudentData(nameInput, getTodayDate(), new Date().toISOString(), new Date().toISOString(), []);
+            showNotification('নাম সফলভাবে সংরক্ষিত হয়েছে!', false);
+            showDashboard();
+          } else {
+            showNotification('অনুগ্রহ করে একটি বৈধ নাম লিখুন', true);
+          }
+        });
+      } else {
+        // Update last login
+        localStorage.setItem(STORAGE_KEYS.LAST_LOGIN, new Date().toISOString());
+
+        // Alarms
+        const alarms = $('#alarms');
+        if (stats.before.pendingClasses + stats.before.pendingMissions + stats.before.pendingExams > 0) {
+          alarms.innerHTML += `<div class="alert-box warning"><i class="fas fa-exclamation-triangle"></i> জয়েনের আগের ক্লাস, মিশন এবং পরীক্ষাগুলো নিজ দায়িত্বে সম্পন্ন করুন যতক্ষণ না সবগুলো শেষ হয়।</div>`;
+        }
+        if (daysSinceActivity > 7) {
+          alarms.innerHTML += `<div class="alert-box warning"><i class="fas fa-exclamation-triangle"></i> আপনি টানা ১ সপ্তাহের বেশি ক্লাস করেননি! আজকের ক্লাস বক্সে গিয়ে সপ্তাহের ক্লাস সিলেক্ট করে প্রতিটা ক্লাস করে নিন।</div>`;
+        }
+        if (daysSinceActivity > 30) {
+          alarms.innerHTML += `<div class="alert-box warning"><i class="fas fa-exclamation-triangle"></i> আপনি টানা ১ মাসের বেশি ক্লাস করেননি! আজকের ক্লাস বক্সে গিয়ে মাসের ক্লাস সিলেক্ট করে প্রতিটা ক্লাস করে নিন।</div>`;
+        }
+        if (stats.progress < 10 && !isNewUser) {
+          alarms.innerHTML += `<div class="alert-box warning"><i class="fas fa-exclamation-triangle"></i> আপনার অগ্রগতি খুব কম! নিয়মিত ক্লাস করে অগ্রসর হোন।</div>`;
+        }
+        if (stats.after.pendingClasses > 5) {
+          alarms.innerHTML += `<div class="alert-box warning"><i class="fas fa-exclamation-triangle"></i> জয়েনের পরের ক্লাসগুলোতে অনেক বাকি! দ্রুত সম্পন্ন করুন।</div>`;
+        }
+
+        // Close button
+        const closeBtn = $('#close-btn');
+        closeBtn.addEventListener('click', () => {
+          const dashboardModal = $('#dashboard-modal');
+          dashboardModal.classList.remove('show');
+        });
+
+        // Notes functionality
+        renderNotes();
+        const addNoteBtn = $('#add-note-btn');
+        addNoteBtn.addEventListener('click', () => {
+          const noteInput = $('#note-input');
+          const noteText = noteInput.value.trim();
+          if (noteText) {
+            let notes = getNotes();
+            notes.push(noteText);
+            saveNotes(notes);
+            renderNotes();
+            noteInput.value = '';
+            showNotification('নোট যোগ করা হয়েছে!', false);
+          } else {
+            showNotification('অনুগ্রহ করে নোট লিখুন', true);
+          }
+        });
+      }
+
+      const dashboardModal = $('#dashboard-modal');
+      dashboardModal.classList.add('show');
+    }
+
+    document.addEventListener('DOMContentLoaded', () => {
+      const dashboardBtn = $('#dashboard-btn');
+      dashboardBtn.addEventListener('click', () => {
+        showDashboard();
+      });
+      showDashboard(); // Automatically show dashboard on page load
+    });
+  </script>
+</body>
+    </html></textarea>
     <div class="controls">
       <button onclick="selectCode('code5')">Select All</button>
       <button class="btn-blue" onclick="copyCode('code5')">Copy</button>
